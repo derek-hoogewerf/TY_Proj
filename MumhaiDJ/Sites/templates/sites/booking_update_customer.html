@@ -1,0 +1,28 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+    {% if request.user.customer.id == object.customer.id or request.user.is_staff %}
+        {% if object.status != 'R' and object.status != 'C' %}
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Edit Booking Details</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Confirm</button>
+            </div>
+        </form>
+        {% else %}
+        <div class="article-metadata">
+          <p class="article-content">You cannot edit the booking at this point</p>
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="article-metadata">
+          <p class="article-content">You are not authorized to edit this booking information</p>
+        </div>
+    {% endif %}
+    </div>
+{% endblock content %}

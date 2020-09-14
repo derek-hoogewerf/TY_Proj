@@ -1,0 +1,59 @@
+{% extends "users/base.html" %}
+{% block content %}
+    <article class="media content-section">
+      {% if request.user.customer.id == object.customer.id or request.user.customer.id == object.employee.id or request.user.is_staff %}
+      <img class="rounded-rectangle article-img" src="{{object.site.img.url}}">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">{{ object.site.location }}</a>
+        </div>
+        <h2>{{ object.site.name }}</h2>
+          <p class="article-content">Rating: {{ object.site.rating }}</p>
+          <small class="text-muted"></small>
+        <h3>Booking Details</h3>
+          <p class="article-content">Customer: {{ object.customer.first_name }} {{ object.customer.last_name }}</p>
+          <p class="article-content">Customer Contact: {{ object.customer.number }}</p>
+          <p class="article-content">Employee: {{ object.employee.first_name }} {{ object.employee.last_name }}</p>
+          <p class="article-content">Employee Contact {{ object.employee.number }}</p>
+          
+          <hr>
+          <p class="article-content">Date of Travel: {{ object.date }}</p>
+          <p class="article-content">Pick-up Location
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">
+              {{ object.pickloc }}
+          </a></p>
+          <p class="article-content">Drop Location
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">
+              {{ object.droploc }}
+          </a></p>
+          <p class="article-content">Status: {{ object.get_status_display }}</p>
+          
+          
+          
+          
+          {% if object.status == 'C' %}
+          {% if request.user.customer.id == object.customer.id %}
+          <a class="btn-info btn-sm mt-1 mb-1" href="#">Review Site</a>
+          {% endif %}
+          
+          {% elif status != 'R'%}
+            {% if status != 'C' %}
+            {% if statuus != 'I' %}
+              {% if request.user.customer.id == object.customer.id or request.user.is_staff %}
+                <a class="btn-info btn-sm mt-1 mb-1" href="{% url 'site-book-update' object.id %}" >Update Details</a>
+              {% endif %}
+          
+              {% if request.user.customer.id == object.employee.id  or request.user.is_staff %}
+                <a class="btn-info btn-sm mt-1 mb-1" href="{% url 'site-book-update-emp' object.id %}">Update Status</a>
+              {% endif %}
+            {% endif %}
+            {% endif %}
+          {% endif %}
+      </div>
+        {% else %}
+        <div class="article-metadata">
+          <p class="article-content">You are not authorized to view this page</p>
+        </div>
+        {% endif %}
+    </article>
+{% endblock content %}

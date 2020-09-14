@@ -1,0 +1,55 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <article class="media content-section">
+      {% if request.user.customer.id == object.employee.id or request.user.is_staff %}
+      <img class="rounded-rectangle article-img" src="{{object.site.img.url}}">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">{{ object.site.location }}</a>
+        </div>
+        <h2>{{ object.site.name }}</h2>
+          <p class="article-content">Rating: {{ object.site.rating }}</p>
+          <small class="text-muted"></small>
+        <h3>Booking Details</h3>
+          <p class="article-content">Customer: {{ object.customer.first_name }} {{ object.customer.last_name }}</p>
+          <p class="article-content">Customer Contact: {{ object.customer.number }}</p>
+          <p class="article-content">Employee: {{ object.employee.first_name }} {{ object.employee.last_name }}</p>
+          <p class="article-content">Employee Contact {{ object.employee.number }}</p>
+          
+          <hr>
+          <p class="article-content">Date of Travel: {{ object.date }}</p>
+          <p class="article-content">Pick-up Location
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">
+              {{ object.pickloc }}
+          </a></p>
+          <p class="article-content">Drop Location
+          <a class="mr-2" href="https://www.google.com/maps/search/{{object.location}}">
+              {{ object.droploc }}
+          </a></p>
+          <p class="article-content">Status: {{ object.get_status_display }}</p>
+          
+          {% if object.status != 'R' and object.status != 'C' %}
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Change Booking Status</legend>
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Confirm</button>
+                </div>
+            </form>
+          {% else %}
+              <div class="article-metadata">
+                <p class="article-content">You cannot edit the booking at this point</p>
+              </div>
+          {% endif %}
+      </div>
+        {% else %}
+        <div class="article-metadata">
+          <p class="article-content">You are not authorized to edit this booking status</p>
+        </div>
+        {% endif %}
+    </article>
+{% endblock content %}
